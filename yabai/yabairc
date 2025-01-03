@@ -1,0 +1,124 @@
+#!/usr/bin/env sh
+
+#==============================================================================
+# Initialization
+#==============================================================================
+# Unload the macOS WindowManager process
+# launchctl unload -F /System/Library/LaunchAgents/com.apple.WindowManager.plist > /dev/null 2>&1 &
+
+# Load scripting addition
+sudo yabai --load-sa
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
+
+# # Space management signals
+# yabai -m signal --add event=display_added action="sleep 2 && $HOME/.config/yabai/create_spaces.sh"
+# yabai -m signal --add event=display_removed action="sleep 1 && $HOME/.config/yabai/create_spaces.sh"
+# yabai -m signal --add event=window_created action="sketchybar --trigger windows_on_spaces"
+# yabai -m signal --add event=window_destroyed action="sketchybar --trigger windows_on_spaces"
+
+# ==============================================================================
+# Space Management
+# ==============================================================================
+source $HOME/.config/yabai/create_spaces.sh
+
+
+#==============================================================================
+# Global Settings
+#==============================================================================
+# Layout
+yabai -m config layout                      bsp
+yabai -m config window_placement            second_child
+yabai -m config split_ratio                 0.50
+yabai -m config auto_balance                on
+
+#==============================================================================
+# Padding and Gaps
+#==============================================================================
+yabai -m config top_padding                 40     # Increased for menu bar
+yabai -m config bottom_padding              10
+yabai -m config left_padding                10
+yabai -m config right_padding               10
+yabai -m config window_gap                  5
+
+#==============================================================================
+# Mouse Configuration
+#==============================================================================
+yabai -m config mouse_follows_focus         on
+yabai -m config focus_follows_mouse         off
+yabai -m config mouse_modifier              alt
+yabai -m config mouse_action1               move    # Left click + drag
+yabai -m config mouse_action2               resize  # Right click + drag
+yabai -m config mouse_drop_action           swap
+
+#==============================================================================
+# Window Aesthetics
+#==============================================================================
+yabai -m config window_shadow               off
+yabai -m config window_border               off
+# yabai -m config window_border_width         6
+# yabai -m config active_window_border_color  0xFFFFFFFF     # Bright white for active
+# yabai -m config normal_window_border_color  0x66808080     # Semi-transparent gray
+yabai -m config window_opacity              on             # Enable window opacity
+yabai -m config active_window_opacity       1.0            # Active window is fully opaque
+yabai -m config normal_window_opacity       0.85           # Inactive windows are slightly transparent
+
+
+#==============================================================================
+# App Rules
+#==============================================================================
+# Apps to not manage (ignore)
+yabai -m rule --add app="^System Settings$" manage=off #space=^1
+yabai -m rule --add app="^Calculator$" manage=off
+yabai -m rule --add app="^sketchybar$" layer=above manage=off
+yabai -m rule --add app="^Finder$" title="(Co(py|nnect)|Move|Info|Pref)" manage=off
+yabai -m rule --add app="^1Password$" manage=off
+yabai -m rule --add app="^Activity Monitor$" manage=off
+yabai -m rule --add app="^App Store$" manage=off
+yabai -m rule --add app="^Books$" manage=off
+yabai -m rule --add app="^Calendar$" manage=off
+yabai -m rule --add app="^Discord$" manage=off
+yabai -m rule --add app="^FaceTime$" manage=off
+yabai -m rule --add app="^Google Chrome$" manage=off
+yabai -m rule --add app="^Mail$" manage=off
+yabai -m rule --add app="^Maps$" manage=off
+yabai -m rule --add app="^Messages$" manage=off
+yabai -m rule --add app="^Microsoft Teams$" manage=off
+yabai -m rule --add app="^Music$" manage=off
+yabai -m rule --add app="^Notes$" manage=off
+yabai -m rule --add app="^Photos$" manage=off
+yabai -m rule --add app="^Preview$" manage=off
+yabai -m rule --add app="^Reminders$" manage=off
+yabai -m rule --add app="^Safari$" manage=off
+yabai -m rule --add app="^Slack$" manage=off
+yabai -m rule --add app="^Spotify$" manage=off
+yabai -m rule --add app="^Terminal$" manage=off
+yabai -m rule --add app="^Visual Studio Code$" manage=off
+yabai -m rule --add app="^WeChat$" manage=off
+yabai -m rule --add app="^WeCom$" manage=off
+yabai -m rule --add app="^WhatsApp$" manage=off
+yabai -m rule --add app="^Simulator$" manage=off
+yabai -m rule --add app="^iPhone Mirroring$" manage=off
+
+#==============================================================================
+# Space Settings
+#==============================================================================
+# Set maximum windows in vertical split for space 1
+yabai -m config --space 1 window_max_count 8
+
+
+
+
+#==============================================================================
+# Sketchybar Integration
+#==============================================================================
+if command -v sketchybar >/dev/null 2>&1; then
+    # Window focus signals
+    yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
+    
+    # Space update signals
+    yabai -m signal --add event=window_created action="sketchybar --trigger windows_on_spaces"
+    yabai -m signal --add event=window_destroyed action="sketchybar --trigger windows_on_spaces"
+fi
+
+borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=8.0
