@@ -1,1 +1,6 @@
 .DS_Store
+
+# Generated shell caches / session history (machine-specific, do not track)
+zsh/.zcompdump
+zsh/.zsh_sessions/
+zsh/.zsh_history

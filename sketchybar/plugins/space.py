@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
-import os, json, re
+import json
+import os
+import re
 
 ICON_MAP = [
     {"regex": r"1Password 7", "icon": ":one_password:"},
@@ -21,9 +23,15 @@ ICON_MAP = [
     {"regex": r"Brave Browser", "icon": ":brave_browser:"},
     {"regex": r"Calendar|Fantastical", "icon": ":calendar:"},
     {"regex": r"Calibre", "icon": ":book:"},
-    {"regex": r"Canary Mail|HEY|Mail|Mailspring|MailMate|邮件|Outlook", "icon": ":mail:"},
+    {
+        "regex": r"Canary Mail|HEY|Mail|Mailspring|MailMate|邮件|Outlook",
+        "icon": ":mail:",
+    },
     {"regex": r"Caprine", "icon": ":caprine:"},
-    {"regex": r"Chromium|Google Chrome|Google Chrome Canary", "icon": ":google_chrome:"},
+    {
+        "regex": r"Chromium|Google Chrome|Google Chrome Canary",
+        "icon": ":google_chrome:",
+    },
     {"regex": r"CleanMyMac X", "icon": ":desktop:"},
     {"regex": r"ClickUp", "icon": ":click_up:"},
     {"regex": r"Code|Code - Insiders", "icon": ":code:"},
@@ -41,7 +49,10 @@ ICON_MAP = [
     {"regex": r"Figma", "icon": ":figma:"},
     {"regex": r"Final Cut Pro", "icon": ":final_cut_pro:"},
     {"regex": r"Finder|访达", "icon": ":finder:"},
-    {"regex": r"Firefox Developer Edition|Firefox Nightly", "icon": ":firefox_developer_edition:"},
+    {
+        "regex": r"Firefox Developer Edition|Firefox Nightly",
+        "icon": ":firefox_developer_edition:",
+    },
     {"regex": r"Firefox", "icon": ":firefox:"},
     {"regex": r"Folx", "icon": ":folx:"},
     {"regex": r"GitHub Desktop", "icon": ":git_hub:"},
@@ -135,49 +146,56 @@ ICON_MAP = [
 
 
 def to_sup(s):
-    sups = {u'0': u'\u2070',
-            u'1': u'\xb9',
-            u'2': u'\xb2',
-            u'3': u'\xb3',
-            u'4': u'\u2074',
-            u'5': u'\u2075',
-            u'6': u'\u2076',
-            u'7': u'\u2077',
-            u'8': u'\u2078',
-            u'9': u'\u2079'}
+    sups = {
+        "0": "\u2070",
+        "1": "\xb9",
+        "2": "\xb2",
+        "3": "\xb3",
+        "4": "\u2074",
+        "5": "\u2075",
+        "6": "\u2076",
+        "7": "\u2077",
+        "8": "\u2078",
+        "9": "\u2079",
+    }
 
-    return ''.join(sups.get(char, char) for char in str(s))
+    return "".join(sups.get(char, char) for char in str(s))
 
 
 def to_icon(app):
     for x in ICON_MAP:
-        if re.search(x['regex'], app):
-            return x['icon']
-    return ':default:'
+        if re.search(x["regex"], app):
+            return x["icon"]
+    return ":default:"
 
 
 def to_formatted_icon(app, c):
-    cnt = f" {to_sup(c)}" if c > 1 else ''
+    cnt = f" {to_sup(c)}" if c > 1 else ""
     return f"{to_icon(app)}{cnt}"
 
 
 def to_formatted_icons(apps):
-    return ' '.join([to_formatted_icon(app, cnt) for app, cnt in apps.items()])
+    return " ".join([to_formatted_icon(app, cnt) for app, cnt in apps.items()])
 
 
 spaces = {}
-apps = json.loads(os.popen('yabai -m query --windows').read())
+apps = json.loads(os.popen("yabai -m query --windows").read())
 for app in apps:
-    spaces[app['space']] = spaces.get(app['space'], {})
-    spaces[app['space']][app['app']] = spaces[app['space']].get(app['app'], 0) + 1
+    spaces[app["space"]] = spaces.get(app["space"], {})
+    spaces[app["space"]][app["app"]] = spaces[app["space"]].get(app["app"], 0) + 1
 
-args = ' '.join([f'--set space.{space} label="{to_formatted_icons(apps)}" label.drawing=on' for space, apps in spaces.items()])
+args = " ".join(
+    [
+        f'--set space.{space} label="{to_formatted_icons(apps)}" label.drawing=on'
+        for space, apps in spaces.items()
+    ]
+)
 default_args = "--set spaces_bracket drawing=off --set '/space\..*/' background.drawing=on --animate sin 10"
 
-args2 = ''
-spaces = json.loads(os.popen('yabai -m query --spaces').read())
+args2 = ""
+spaces = json.loads(os.popen("yabai -m query --spaces").read())
 for space in spaces:
-    if not space['windows']:
+    if not space["windows"]:
         args2 = f'{args2} --set space.{space["index"]} label="" label.drawing=off'
 
-os.system(f'sketchybar -m {default_args} {args} {args2}')
+os.system(f"sketchybar -m {default_args} {args} {args2}")

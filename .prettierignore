@@ -1,0 +1,10 @@
+_archive/
+zsh/.zcompdump
+zsh/.zsh_sessions/
+zsh/.zsh_history
+nvim/plugin/packer_compiled.lua
+sketchybar/helper/
+*.sh
+*.lua
+*.c
+*.h
