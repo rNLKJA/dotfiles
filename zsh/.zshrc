@@ -125,5 +125,5 @@ source $HOME/.config/shell/fast-syntax-highlighting/fast-syntax-highlighting.plu
 # To add autojump
 [ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
 
-# Border for yabai
+# Window borders (JankyBorders)
 borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=8.0  

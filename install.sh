@@ -34,11 +34,6 @@ brew install \
     electron \
     jq
 
-# Install yabai
-echo -e "${BLUE}Installing yabai...${NC}"
-brew install koekeishiya/formulae/yabai
-brew services start yabai
-
 # Install sketchybar
 echo -e "${BLUE}Installing sketchybar...${NC}"
 brew install FelixKratz/formulae/sketchybar
@@ -46,40 +41,10 @@ brew services start sketchybar
 
 # Create necessary directories
 echo -e "${BLUE}Creating config directories...${NC}"
-mkdir -p ~/.config/yabai
 mkdir -p ~/.config/sketchybar
 
 # Copy configuration files
 echo -e "${BLUE}Setting up configurations...${NC}"
-
-# Setup yabai spaces
-cat > ~/.config/yabai/create_spaces.sh << 'EOL'
-#!/usr/bin/env sh
-
-function setup_space {
-    local idx="$1"
-    local name="$2"
-    local space=
-    echo "setup space $idx : $name"
-    
-    space=$(yabai -m query --spaces --space "$idx")
-    if [ -z "$space" ]; then
-        yabai -m space --create
-    fi
-    
-    yabai -m space "$idx" --label "$name"
-}
-
-# Initialize spaces
-setup_space 1 communication
-setup_space 2 daily
-setup_space 3 coding
-setup_space 4 classbro
-
-sketchybar --trigger space_change --trigger windows_on_spaces
-EOL
-
-chmod +x ~/.config/yabai/create_spaces.sh
 
 # Setup sketchybar config
 mkdir -p ~/.config/sketchybar/plugins
@@ -93,12 +58,7 @@ npm install -g create-electron-app
 # Final setup steps
 echo -e "${BLUE}Running final setup steps...${NC}"
 
-# Start services
-echo -e "${BLUE}Starting services...${NC}"
-~/.config/yabai/create_spaces.sh
-
 # Set proper permissions
-chmod -R 755 ~/.config/yabai
 chmod -R 755 ~/.config/sketchybar
 
 echo -e "${GREEN}Installation complete!${NC}"
