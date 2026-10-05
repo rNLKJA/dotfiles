@@ -1,6 +1,24 @@
 .DS_Store
 
 # Generated shell caches / session history (machine-specific, do not track)
-zsh/.zcompdump
+zsh/.zcompdump*
 zsh/.zsh_sessions/
 zsh/.zsh_history
+
+# Credential stores and tokens (never track)
+gh/
+gcloud/
+typesafe/
+configstore/
+vercel-plugin/
+**/hosts.yml
+**/*credentials*
+**/*token*
+**/api_key
+*.pem
+*.key
+.env*
+
+# Machine-local app state
+rstudio/
+swi-prolog/
